@@ -3,13 +3,21 @@ import React, {useState, useEffect} from 'react';
 
 function TokenPicker(props) {
 
-  // const defineTokenList() => {
-  // 	tokens = 
-  // }
- 
- 
   
+ // var initialAr = props.items;
+ // var tokensHTML = [];
+ // for(const adr in initialAr) {
+ // 	const token = initialAr[adr];
+ // 	tokensHTML.push(<div onClick={() => props.selectToken(token)} >
+ // 						{/* <img src={token.logoURI}></img> */}
+ // 						<span>{token.symbol}</span>
+ // 					</div>)	
+ // }
+
+
+
   return (
+
     <div class="modal" id="token_modal" style={{display:props.display}}
      tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -28,7 +36,12 @@ function TokenPicker(props) {
             </button>
           </div>
           <div class="modal_body">
-            <div id="token_list"></div>
+            <div id="token_list">
+            	{props.tokensHTML}
+            	{/* <div><img/><span>ONE</span></div> */}
+            	{/* <div><img/><span>TWO</span></div> */}
+            	{/* <div><img/><span>TREE</span></div> */}
+            </div>
           </div>
         </div>
       </div>

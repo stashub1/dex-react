@@ -14,7 +14,11 @@ function App() {
   const [networkId, setNetworkId] = useState("");
   //const [isOpenDialog, setOpenDialog] = useState(false);
   const [selectFromDisplay, setSelectFromDisplay] = useState("none");
+  const [tokens, setTokens] = useState("");
+  const [selectedFromToken, setSelectedFromToken] = useState("");
+  const [tokensHTML, setTokensHTML] = useState("");
 
+  var tokenMap = new Map();
 
   useEffect(() => {
     const loadweb3 = async() => {
@@ -22,8 +26,9 @@ function App() {
     }
     
     async function loadTokensFromDB() {
-         const tokens = await fetchTokensFromLocalServer();
-         parseTokens(tokens);
+        const tokens = await fetchTokensFromLocalServer();
+        setTokens(tokens);
+        listTokens(tokens);
     }
     //loadweb3();
     //loadBlockData();
@@ -35,6 +40,25 @@ function App() {
   function closeDialog() {
     console.log("closeDialog");
     setSelectFromDisplay("none");
+  }
+
+  const listTokens =  (tokens) => {
+       var tokensHTML = [];
+       console.log("list tokens", tokens);
+       if(tokens) {
+         for(const adr in tokens) {
+            const token = tokens[adr];
+            tokenMap.set(token.symbol, token);
+            tokensHTML.push(<div onClick={() => selectToken(token)} >
+                    {/* <img src={token.logoURI}></img> */}
+                     <span>{token.symbol}</span>
+                  </div>) 
+
+          }
+          setTokensHTML(tokensHTML);
+       }
+        selectDefaultToken();
+        return tokensHTML;
   }
 
   const toggleDialog = () => {
@@ -67,29 +91,24 @@ function App() {
   const fetchTokens = async () => {
       const result = await fetch("https://api.1inch.io/v4.0/1/tokens");
       const jsonResult = await result.json();
-      console.log("available tokens", jsonResult);
   }
 
   const fetchTokensFromLocalServer = async () => {
       const result = await fetch("http://localhost:5000/tokens");
       const jsonResult = await result.json();
-      console.log("available tokens", jsonResult);
       return jsonResult;
   }
 
-  const parseTokens = async (tokens) => {
-      console.log("inside parsetokens", tokens);
-      const listHolder = "<div></div>";
-      for (const address in tokens) {
-         let token  = tokens[address];
-         console.log("address", token);
-         console.log("symbol", token.symbol);
-         console.log("logo", token.logoURI);
-      }
+  const selectToken = (token)  => {
+    closeDialog();
+    setSelectedFromToken(token);
+  }
+
+  const selectDefaultToken = ()  => {
+    setSelectedFromToken(tokenMap.get("ETH"));
   }
 
   const loadWeb3 = async () => {
-    console.log("inside loadweb3");
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
@@ -105,8 +124,13 @@ function App() {
   return (
     <div className="root">
       <Nav account={account}/>
-      <MainForm  toggleDialog={toggleDialog}/>
-      <TokenPicker closeDialog={closeDialog} display={selectFromDisplay}/>
+      <MainForm  toggleDialog={toggleDialog} 
+        selectedFromToken={selectedFromToken}/>
+      <TokenPicker 
+        closeDialog={closeDialog}
+        display={selectFromDisplay}
+        tokensHTML={tokensHTML}
+      />
     </div>
   );
 }

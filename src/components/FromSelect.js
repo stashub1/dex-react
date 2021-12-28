@@ -11,9 +11,12 @@ function FromSelect(props) {
   return (
  	<div className="row d-flex align-items-center choose_raw" id="from_raw">
  		<div className="swapbox_select row align-items-center col-auto mr-auto currency_container" 
- 			id="from_currency_container" onClick={() => props.toggleDialog()} >
+ 			id="from_currency_container" 
+ 			onClick={() => props.toggleDialog()} 
+ 			>
 	        <img className="token_image" id="from_image"></img>
-	        <div className="symbol_name" id="from_token">frf</div>
+	        <div className="symbol_name" id="from_token">
+	        			{props.selectedFromToken.symbol}</div>
 	        <i className="material-icons">expand_more</i>
         </div>
 

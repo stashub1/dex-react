@@ -12,7 +12,8 @@ function MainForm(props) {
 
      <div className="container col-md-5  bg-dark text-white">
      	<FormTitle />
-     	<FromSelect  toggleDialog={props.toggleDialog}/>
+     	<FromSelect  toggleDialog={props.toggleDialog} 
+     		selectedFromToken={props.selectedFromToken}/>
      	<ToSelect />
      	<SwapBtn />
      </div>
