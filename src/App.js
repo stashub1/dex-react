@@ -16,7 +16,10 @@ function App() {
   const [selectFromDisplay, setSelectFromDisplay] = useState("none");
   const [tokens, setTokens] = useState("");
   const [selectedFromToken, setSelectedFromToken] = useState("");
+  const [selectedToToken, setSelectedToToken] = useState("");
+
   const [tokensHTML, setTokensHTML] = useState("");
+  const [modalType, setModalType] = useState("");
 
   var tokenMap = new Map();
 
@@ -27,13 +30,22 @@ function App() {
     
     async function loadTokensFromDB() {
         const tokens = await fetchTokensFromLocalServer();
+        // setTokens(tokens);
+        // listTokens(tokens);
+    }
+
+    async function loadTokens() {
+        const tokens = await fetchTokens();
         setTokens(tokens);
-        listTokens(tokens);
+        storeTokensToTokenMap(tokens);
+        selectDefaultToken();
     }
     //loadweb3();
     //loadBlockData();
     //fetchTokens();
-    loadTokensFromDB();
+    //loadTokensFromDB();
+    //loadTokensFromDB();
+    loadTokens();
     
   }, []);
 
@@ -42,34 +54,49 @@ function App() {
     setSelectFromDisplay("none");
   }
 
-  const listTokens =  (tokens) => {
-       var tokensHTML = [];
-       console.log("list tokens", tokens);
+  const storeTokensToTokenMap =  (tokens) => {
        if(tokens) {
          for(const adr in tokens) {
             const token = tokens[adr];
             tokenMap.set(token.symbol, token);
-            tokensHTML.push(<div onClick={() => selectToken(token)} >
-                    {/* <img src={token.logoURI}></img> */}
-                     <span>{token.symbol}</span>
-                  </div>) 
-
           }
-          setTokensHTML(tokensHTML);
-       }
-        selectDefaultToken();
+        }
         return tokensHTML;
   }
 
-  const toggleDialog = () => {
+  const prepareHTMLForTokenSelect = (type) => {
+      var tokensHTML = [];
+      if(tokens) {
+         for(const adr in tokens) {
+            const token = tokens[adr];
+            tokenMap.set(token.symbol, token);
+            if (type === 1) {
+              tokensHTML.push(<div onClick={() => selectFromToken(token)} >
+                      <img src={token.logoURI}></img>
+                       <span>{token.symbol}</span>
+                    </div>) 
+            } else if (type === 2) {
+                tokensHTML.push(<div onClick={() => selectToToken(token)} >
+                    <img src={token.logoURI}></img>
+                     <span>{token.symbol}</span>
+                  </div>) 
+            } 
+
+          }
+          setTokensHTML(tokensHTML);
+        }
+  }
+
+  const toggleDialog = (type) => {
       console.log("toggleDialog", selectFromDisplay);
       if(selectFromDisplay === "none") {
           setSelectFromDisplay("block");
       } else {
           setSelectFromDisplay("none");
       }
-      console.log("toggleDialogEnd", selectFromDisplay);
-
+      console.log("toggleDialog type", type);
+      setModalType(type);
+      prepareHTMLForTokenSelect(type);
   }
 
   const loadBlockData = async function loadBlockchainData() {
@@ -91,21 +118,32 @@ function App() {
   const fetchTokens = async () => {
       const result = await fetch("https://api.1inch.io/v4.0/1/tokens");
       const jsonResult = await result.json();
+      console.log("fetch tokens jsonn", jsonResult);
+      return jsonResult.tokens;
   }
 
   const fetchTokensFromLocalServer = async () => {
       const result = await fetch("http://localhost:5000/tokens");
       const jsonResult = await result.json();
+      console.log("dbserver tokens jsonn", jsonResult);
       return jsonResult;
   }
 
-  const selectToken = (token)  => {
+  const selectFromToken = (token)  => {
     closeDialog();
     setSelectedFromToken(token);
   }
 
+  const selectToToken = (token)  => {
+    closeDialog();
+    setSelectedToToken(token);
+  }
+
   const selectDefaultToken = ()  => {
     setSelectedFromToken(tokenMap.get("ETH"));
+    console.log("DAI", tokenMap.get("DAI"));
+    console.log("ETH", tokenMap.get("ETH"));
+    setSelectedToToken(tokenMap.get("DAI"));
   }
 
   const loadWeb3 = async () => {
@@ -125,7 +163,9 @@ function App() {
     <div className="root">
       <Nav account={account}/>
       <MainForm  toggleDialog={toggleDialog} 
-        selectedFromToken={selectedFromToken}/>
+        selectedFromToken={selectedFromToken}
+        selectedToToken={selectedToToken}
+      />
       <TokenPicker 
         closeDialog={closeDialog}
         display={selectFromDisplay}

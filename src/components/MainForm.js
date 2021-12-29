@@ -13,8 +13,11 @@ function MainForm(props) {
      <div className="container col-md-5  bg-dark text-white">
      	<FormTitle />
      	<FromSelect  toggleDialog={props.toggleDialog} 
-     		selectedFromToken={props.selectedFromToken}/>
-     	<ToSelect />
+     		selectedFromToken={props.selectedFromToken}
+        />
+     	<ToSelect toggleDialog={props.toggleDialog} 
+            selectedToToken={props.selectedToToken}
+        />
      	<SwapBtn />
      </div>
      		

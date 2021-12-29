@@ -14,6 +14,7 @@ function TokenPicker(props) {
  // 					</div>)	
  // }
 
+  console.log("Picker tokensHTML", props.tokensHTML);
 
 
   return (
