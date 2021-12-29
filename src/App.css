@@ -49,3 +49,24 @@
   cursor:pointer;
   opacity: 0.5;
 }
+
+#token_list { 
+  padding: 5px;
+}
+
+.token_raw {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.token_raw:hover{
+  transition: opacity 0.3s ease-in-out;
+  cursor:pointer;
+  opacity: 0.5;
+  background-color: grey;
+}
+
+
+.token_list_symbol {
+  pading-left: 8px;
+}

@@ -72,12 +72,12 @@ function App() {
       if(tokens) {
          for(const adr in tokens) {
             const token = tokens[adr];
-            fromTokensHTML.push(<div onClick={() => selectFromToken(token)} >
+            fromTokensHTML.push(<div className="token_raw" onClick={() => selectFromToken(token)} >
                     {/* <img src={token.logoURI}></img> */}
                      <span>{token.symbol}</span>
                   </div>) 
           
-            toTokensHTML.push(<div onClick={() => selectToToken(token)} >
+            toTokensHTML.push(<div className="token_raw" onClick={() => selectToToken(token)} >
                 {/* <img src={token.logoURI}></img> */}
                  <span>{token.symbol}</span>
               </div>) 
@@ -85,8 +85,6 @@ function App() {
           setToTokensHTML(toTokensHTML);
           setFromTokensHTML(fromTokensHTML);
         }
-        console.log("prepare toTokensHTML", toTokensHTML);
-        console.log("prepare fromTokensHTML", fromTokensHTML);
   }
 
    function toggleDialog(type) {
@@ -96,7 +94,6 @@ function App() {
       } else {
           setSelectFromDisplay("none");
       }
-      console.log("toggleDialog type", type);
       setModalType(type);
       prepareHTMLForTokenSelect(type);
   }
@@ -174,7 +171,6 @@ function App() {
         toTokensHTML={toTokensHTML}
         fromTokensHTML={fromTokensHTML}
         modalType={modalType}
-
       />
     </div>
   );
