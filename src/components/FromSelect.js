@@ -17,8 +17,8 @@ function FromSelect(props) {
  			onClick={() => props.toggleDialog(1)	} 
  			>
 	        <img className="token_image" id="from_image"></img>
-	        {/* <div className="symbol_name" id="from_token"> */}
-	        {/* 			{props.selectedFromToken.symbol}</div> */}
+	        <div className="symbol_name" id="from_token">
+	        			{props.selectedFromToken.symbol}</div>
 	        <i className="material-icons">expand_more</i>
         </div>
 

@@ -18,7 +18,9 @@ function App() {
   const [selectedFromToken, setSelectedFromToken] = useState("");
   const [selectedToToken, setSelectedToToken] = useState("");
 
-  const [tokensHTML, setTokensHTML] = useState("");
+  const [toTokensHTML, setToTokensHTML] = useState("");
+  const [fromTokensHTML, setFromTokensHTML] = useState("");
+
   const [modalType, setModalType] = useState("");
 
   var tokenMap = new Map();
@@ -36,9 +38,10 @@ function App() {
 
     async function loadTokens() {
         const tokens = await fetchTokens();
-        setTokens(tokens);
-        storeTokensToTokenMap(tokens);
-        selectDefaultToken();
+        await setTokens(tokens);
+        await storeTokensToTokenMap(tokens);
+        await selectDefaultToken();
+        prepareHTMLForTokenSelect();
     }
     //loadweb3();
     //loadBlockData();
@@ -61,33 +64,32 @@ function App() {
             tokenMap.set(token.symbol, token);
           }
         }
-        return tokensHTML;
   }
 
-  const prepareHTMLForTokenSelect = (type) => {
-      var tokensHTML = [];
+  const prepareHTMLForTokenSelect = () => {
+      var toTokensHTML = [];
+      var fromTokensHTML = [];
       if(tokens) {
          for(const adr in tokens) {
             const token = tokens[adr];
-            tokenMap.set(token.symbol, token);
-            if (type === 1) {
-              tokensHTML.push(<div onClick={() => selectFromToken(token)} >
-                      <img src={token.logoURI}></img>
-                       <span>{token.symbol}</span>
-                    </div>) 
-            } else if (type === 2) {
-                tokensHTML.push(<div onClick={() => selectToToken(token)} >
-                    <img src={token.logoURI}></img>
+            fromTokensHTML.push(<div onClick={() => selectFromToken(token)} >
+                    {/* <img src={token.logoURI}></img> */}
                      <span>{token.symbol}</span>
                   </div>) 
-            } 
-
+          
+            toTokensHTML.push(<div onClick={() => selectToToken(token)} >
+                {/* <img src={token.logoURI}></img> */}
+                 <span>{token.symbol}</span>
+              </div>) 
           }
-          setTokensHTML(tokensHTML);
+          setToTokensHTML(toTokensHTML);
+          setFromTokensHTML(fromTokensHTML);
         }
+        console.log("prepare toTokensHTML", toTokensHTML);
+        console.log("prepare fromTokensHTML", fromTokensHTML);
   }
 
-  const toggleDialog = (type) => {
+   function toggleDialog(type) {
       console.log("toggleDialog", selectFromDisplay);
       if(selectFromDisplay === "none") {
           setSelectFromDisplay("block");
@@ -169,7 +171,10 @@ function App() {
       <TokenPicker 
         closeDialog={closeDialog}
         display={selectFromDisplay}
-        tokensHTML={tokensHTML}
+        toTokensHTML={toTokensHTML}
+        fromTokensHTML={fromTokensHTML}
+        modalType={modalType}
+
       />
     </div>
   );

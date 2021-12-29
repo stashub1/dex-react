@@ -13,9 +13,16 @@ function TokenPicker(props) {
  // 						<span>{token.symbol}</span>
  // 					</div>)	
  // }
+  //console.log("props html", props.toTokensHTML);
 
-  console.log("Picker tokensHTML", props.tokensHTML);
-
+  function defineTokenListHTML() {
+      if(props.modalType === 1) {
+         return props.fromTokensHTML;
+      } else if (props.modalType === 2) {
+         return props.toTokensHTML;
+      }
+  }
+ 
 
   return (
 
@@ -38,7 +45,7 @@ function TokenPicker(props) {
           </div>
           <div class="modal_body">
             <div id="token_list">
-            	{props.tokensHTML}
+            	{defineTokenListHTML()}
             	{/* <div><img/><span>ONE</span></div> */}
             	{/* <div><img/><span>TWO</span></div> */}
             	{/* <div><img/><span>TREE</span></div> */}

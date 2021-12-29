@@ -27,7 +27,7 @@ function ToSelect(props) {
  			>
 	        <img className="token_image" id="to_image"></img>
 	        <div className="symbol_name" id="to_token">
-	        			{symbol}</div>
+	        			{props.selectedToToken.symbol}</div>
 	        <i className="material-icons">expand_more</i>
         </div>
 
