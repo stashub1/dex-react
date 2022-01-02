@@ -22,10 +22,13 @@ function App() {
   const [fromTokensHTML, setFromTokensHTML] = useState("");
 
   const [modalType, setModalType] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [quoteValue, setQuoteValue] = useState("");
 
   var tokenMap = new Map();
 
   useEffect(() => {
+
     const loadweb3 = async() => {
           await loadWeb3();     
     }
@@ -43,15 +46,12 @@ function App() {
         await selectDefaultToken();
         prepareHTMLForTokenSelect();
     }
-    //loadweb3();
-    //loadBlockData();
-    //fetchTokens();
-    //loadTokensFromDB();
-    //loadTokensFromDB();
+
     loadTokens();
     
   }, []);
 
+  
   function closeDialog() {
     console.log("closeDialog");
     setSelectFromDisplay("none");
@@ -87,7 +87,7 @@ function App() {
         }
   }
 
-   function toggleDialog(type) {
+  function toggleDialog(type) {
       console.log("toggleDialog", selectFromDisplay);
       if(selectFromDisplay === "none") {
           setSelectFromDisplay("block");
@@ -131,11 +131,20 @@ function App() {
   const selectFromToken = (token)  => {
     closeDialog();
     setSelectedFromToken(token);
+    setInputValue("");
+    setQuoteValue("");
+  }
+
+  const fromInputListener = async (value) => {
+    console.log("fromInputListener app.js", value);
+    setInputValue(value);
+    getQuote(value);
   }
 
   const selectToToken = (token)  => {
     closeDialog();
     setSelectedToToken(token);
+    getQuote(inputValue);
   }
 
   const selectDefaultToken = ()  => {
@@ -143,6 +152,33 @@ function App() {
     console.log("DAI", tokenMap.get("DAI"));
     console.log("ETH", tokenMap.get("ETH"));
     setSelectedToToken(tokenMap.get("DAI"));
+  }
+
+  const getQuote = async (value) => { 
+      console.log("get quote", value);
+      let isnum = /^\d+$/.test(value);
+      if(!selectedFromToken || !selectedToToken || !value) return;
+      console.log("get quote 2", value);
+      const fromAdr = selectedFromToken.address;
+      const toAdr = selectedToToken.address;
+      const network = "eth";
+      const amount = value;   
+      console.log("quote toadr", toAdr);
+      console.log("quote fromadr", fromAdr);
+      console.log("quote amount", amount);
+      const requestResult = await fetchQuote(fromAdr,toAdr,amount);
+      setQuoteValue(requestResult);
+  }
+
+  const fetchQuote = async (addressFrom,addressTo,changeAmount) => {
+      const result = await fetch("https://api.1inch.io/v4.0/1/quote?" + new URLSearchParams({
+          fromTokenAddress : addressFrom,
+          toTokenAddress : addressTo,
+          amount : changeAmount, 
+      }));
+      const jsonResult = await result.json();
+      return jsonResult.toTokenAmount;
+      //return jsonResult;
   }
 
   const loadWeb3 = async () => {
@@ -164,6 +200,10 @@ function App() {
       <MainForm  toggleDialog={toggleDialog} 
         selectedFromToken={selectedFromToken}
         selectedToToken={selectedToToken}
+        fromInputListener={fromInputListener}
+        inputValue={inputValue}
+        quoteValue={quoteValue}
+
       />
       <TokenPicker 
         closeDialog={closeDialog}

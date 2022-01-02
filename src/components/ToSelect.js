@@ -3,20 +3,7 @@ import React, {useState, useEffect} from 'react';
 
 function ToSelect(props) {
 
-
-  const symbol = () => {
-  	if(props.selectedToToken) {
-  		return props.selectedToToken.symbol;
-  	} else {
-  		return "No symbol or token passed";
-  	}
-  }
-  
-
-  const onKeyPressHandler = function (event) {
-  	console.log("Onkeypress", event.charCode >= 48 && event.charCode <= 57);
-  	return (event.charCode >= 48 && event.charCode <= 57);
-  }
+  console.log("quoteValue ToSelect", props.quoteValue);
 
   return (
 
@@ -33,9 +20,13 @@ function ToSelect(props) {
 
 	      <div className="col-auto">
 	        <input className="number form-control" 
-	        	placeholder="amount" 
+	        	placeholder="0" 
 	        	id="to_input" 
-	        	onKeyPress={onKeyPressHandler}/>
+	        	type="number"
+	        	value={props.quoteValue} 
+	        	// onKeyPress={e => this.onChange(e.target.value)}
+	        	// onKeyPress={onKeyPressHandler()}
+	        />
 	     </div>
  	 </div>
   );

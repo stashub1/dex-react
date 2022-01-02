@@ -14,9 +14,12 @@ function MainForm(props) {
      	<FormTitle />
      	<FromSelect  toggleDialog={props.toggleDialog} 
      		selectedFromToken={props.selectedFromToken}
+            fromInputListener={props.fromInputListener}
+            inputValue={props.inputValue}
         />
      	<ToSelect toggleDialog={props.toggleDialog} 
             selectedToToken={props.selectedToToken}
+            quoteValue={props.quoteValue}
         />
      	<SwapBtn />
      </div>

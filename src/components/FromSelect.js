@@ -1,20 +1,17 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 
 
 function FromSelect(props) {
 
-  console.log("FromSelect selectedFromToken", props.selectedFromToken);
-
-  const onKeyPressHandler = function (event) {
-  	console.log("Onkeypress", event.charCode >= 48 && event.charCode <= 57);
-  	return (event.charCode >= 48 && event.charCode <= 57);
+  const onInputChange = function (event) {
+    props.fromInputListener(event.target.value);
   }
 
   return (
  	<div className="row d-flex align-items-center choose_raw" id="from_raw">
  		<div className="swapbox_select row align-items-center col-auto mr-auto currency_container" 
  			id="from_currency_container" 
- 			onClick={() => props.toggleDialog(1)	} 
+ 			onClick={() => props.toggleDialog(1)} 
  			>
 	        <img className="token_image" id="from_image"></img>
 	        <div className="symbol_name" id="from_token">
@@ -24,9 +21,12 @@ function FromSelect(props) {
 
 	      <div className="col-auto">
 	        <input className="number form-control" 
-	        	placeholder="amount" 
+	        	placeholder="0" 
 	        	id="from_input" 
-	        	onKeyPress={onKeyPressHandler}/>
+	        	type="number"
+	        	value={props.inputValue}
+	        	onChange={onInputChange}
+	        />
 	     </div>
  	 </div>
   );
